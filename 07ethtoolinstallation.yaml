@@ -1,0 +1,14 @@
+---
+    - hosts: virt
+      tasks:
+        - name: Update APT package manager repositories cache
+          become: true
+          apt:
+            update_cache: yes
+
+        - name: Install ethtool Package
+          become: true
+          apt:
+            name: ethtool
+            state: latest
+            update_cache: yes

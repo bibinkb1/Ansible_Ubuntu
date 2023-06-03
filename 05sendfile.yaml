@@ -1,0 +1,9 @@
+---
+- name: Ansible Copy Example Local to Remote
+  hosts: users
+  tasks:
+    - name: copying file with playbook
+
+      copy:
+        src: ~/Documents/yamlstudy/01script.sh
+        dest: /tmp

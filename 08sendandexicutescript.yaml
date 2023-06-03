@@ -1,0 +1,9 @@
+---
+- name: Lets copy our executable script to remote location execute script and get result back
+  become: yes
+  hosts: manu
+  tasks:
+     - name: Transfer executable script script
+       copy: src=/home/vkchlt0188/Documents/02script.sh dest=/tmp mode=0755
+     - name: Execute the script
+       command: sh /tmp/02script.sh

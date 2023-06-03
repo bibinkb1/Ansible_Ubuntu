@@ -1,0 +1,14 @@
+---
+    - hosts: selvaraj
+      tasks:
+        - name: Update APT package manager repositories cache
+          become: true
+          apt:
+            update_cache: yes
+
+        - name: Install vscode
+          become: true
+          snap:
+            name: code
+            state: latest
+            update_cache: yes
