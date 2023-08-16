@@ -1,0 +1,20 @@
+---
+- name: command
+  become: yes
+  hosts: localhost
+  tasks: 
+
+     - name: command
+       shell: hostnamectl set-hostname 8386--IT--KOCHI
+       register: result_1
+
+     - name: command
+       shell: gpasswd  -a vkchlt0188 netdev
+       register: result_2
+
+     - name: Display results
+       debug:
+         var: item.stdout
+       loop:
+         - "{{ result_1 }}"
+         - "{{ result_2 }}"

@@ -1,0 +1,12 @@
+---
+- name: update
+  hosts: 
+  become: yes
+
+  tasks:
+   - apt: name=wireshark-qt state=latest
+   - apt: name=vim state=latest
+   - apt: name=git state=latest
+   - apt: name=meld state=latest  
+   - apt: name=ethtool state=latest
+   - command: snap install postman

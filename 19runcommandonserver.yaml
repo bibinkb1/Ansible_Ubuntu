@@ -1,0 +1,11 @@
+- name: Execute command on remote host
+  hosts: vivadotest
+  gather_facts: false
+  tasks:
+    - name: Run command
+      command: groups
+      register: command_output
+
+    - name: Display command output
+      debug:
+        var: command_output.stdout

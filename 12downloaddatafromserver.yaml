@@ -1,0 +1,14 @@
+- name: Download file
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Download file
+      synchronize:
+        src: smb://zlibuser:vvdn@172.25.4.50:/run/user/1001/gvfs/smb-share:server=172.25.4.50,share=tempshare/IT/01_Software/02_Others/13_vivadolab/Xilinx_Vivado_Lab_Lin_2023.1_0507_1903.tar.gz
+         
+
+        dest: /home/administrator/Downloads
+        mode: pull
+
+        

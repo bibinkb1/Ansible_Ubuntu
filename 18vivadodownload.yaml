@@ -1,0 +1,12 @@
+---
+- name: Download vivado using sftp
+  hosts: localhost
+  become: true
+  tasks: 
+    - name: send and  script
+       
+      copy: src=/home/vkchlt0188/Documents/vvdn5glabtestpc/test1/sshwithoutmaskpasswd.py dest=/home/administrator/Downloads mode=0755
+        
+    - name : exicute script  
+      command: sh /home/administrator/Downloads/sshwithoutmaskpasswd.py
+   

@@ -4,6 +4,4 @@
   hosts: lab
   tasks:
      - name: Transfer executable script script
-       copy: src=/home/vkchlt0188/backup/Documents/backup/vvdn5glabtestpc/lab.sh  dest=/tmp mode=0755
-     - name: Execute the script
-       command: sh /tmp/lab.sh
+       copy: src=/home/vkchlt0188/Documents/test dest=/home/vkchlt0294/bibin mode=0777 

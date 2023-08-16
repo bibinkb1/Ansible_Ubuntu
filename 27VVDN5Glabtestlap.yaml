@@ -1,0 +1,123 @@
+---
+- hosts: lab
+  become: yes
+  tasks:
+
+     - name: Create a script that will install packages for 5glab test pc
+       copy:
+         content: |
+            #!/usr/bin/bash
+            sudo apt-get update
+            sudo apt install minicom -y
+            sudo apt install net-tools -y
+            sudo apt install vim -y
+            sudo apt-get install libtinfo5 -y
+            sudo apt install sssd sssd-tools -y 
+            sudo apt install tigervnc-standalone-server -y
+            sudo apt install cifs-utils -y
+            sudo apt install cifs-common -y
+            sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo apt install ./google-chrome-stable_current_amd64.deb -y
+
+
+            echo "[sssd]
+            config_file_version = 2
+            services = nss, pam
+            domains = LDAP
+
+            [nss]
+
+            [pam]
+
+            [domain/LDAP]
+            id_provider = ldap
+            auth_provider = ldap
+            ldap_schema = rfc2307
+            ldap_uri = ldap://fpgaldap.vvdntech.com
+            ldap_default_bind_dn = cn=admin,dc=vvdntech,dc=com
+            ldap_default_authtok = Mznxbcv@fpga@123
+            ldap_default_authtok_type = password
+            ldap_search_base = dc=vvdntech,dc=com
+            ldap_user_search_base = ou=People,dc=vvdntech,dc=com
+            ldap_group_search_base = ou=Groups,dc=vvdntech,dc=com
+            ldap_user_object_class = inetOrgPerson
+            ldap_user_gecos = cn
+            #ldap_tls_reqcert = off
+            #ldap_tls_cacert = /etc/pki/tls/certs/ca.crt
+            #ldap_id_use_start_tls = true
+            # uncomment below if the SME is a âiPasserelleâ
+            #ldap_user_shell = desktopLoginShell
+            # comment below if the SME is a âiPasserelleâ
+            override_shell = /bin/bash
+            cache_credentials = true
+            enumerate = true
+            # It is possible to filter the logins via a LDAP-filer
+            # by commenting the both lines below.
+            # In this exemple, only the users member of the group netusers
+            # will be valid on this host.
+            # posixMemberOF is a parameter only for a iPasserelle
+            #access_provider = ldap
+            #ldap_access_filter = (|(posixMemberOf=admins)(uid=backup))
+            access_provider = simple
+            simple_allow_users = arunkumar.kc" > /etc/sssd/sssd.conf
+            
+
+
+            chown root:root /etc/sssd/sssd.conf
+            chmod 600 /etc/sssd/sssd.conf
+            sudo pam-auth-update --enable mkhomedir
+            systemctl restart sssd
+            cd /lib/modules/`uname -r`/kernel/drivers/usb/storage/
+            mv usb-storage.ko usb-storage.ko.blacklist
+            mkdir /root/backup/
+            mkdir /bitNxsa
+            echo "username=samba1
+            password=Secured@FPGAconnect@" > /root/smb_pwd
+            
+            mv /usr/bin/ftp /root/backup/
+            mv /usr/bin/scp /root/backup/
+            mv /usr/bin/sftp /root/backup/
+            mv /usr/bin/rsync /root/backup/
+            
+            new_line="blacklist rndis_host" 
+            if ! grep -qF "$new_line" /etc/modprobe.d/blacklist.conf; then 
+            echo "$new_line" | sudo tee -a /etc/modprobe.d/blacklist.conf
+            else 
+            echo "the line already exsts in blacklist.conf"
+            fi
+
+            sudo modprobe -r rndis_host              
+          
+         dest: /tmp/install.sh
+         mode: 0755
+
+     - name: Run the script 
+       shell: /tmp/install.sh
+
+     - name: Update apt cache
+       apt:
+         update_cache: yes
+
+     - name: Install Xfce packages
+       apt:
+         name: "{{ item }}"
+         state: present
+       with_items:
+        - xfce4
+        - xfce4-goodies      
+
+     - name: mount smb_share
+       ansible.posix.mount:
+               state: "mounted"
+               fstype: "cifs"
+               path: /bitNxsa
+               src: "//172.25.4.100/bitNxsa"
+               opts: "credentials=/root/smb_pwd,file_mode=0777,dir_mode=0777,gid=root,uid=root"
+      
+
+
+
+
+        
+
+

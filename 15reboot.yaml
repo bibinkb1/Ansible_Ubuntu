@@ -1,0 +1,9 @@
+---
+- name: exicute command 
+  become: yes
+  hosts: vvdntestpc
+  tasks:
+    
+    - name: Execute the command
+      command: reboot
+     

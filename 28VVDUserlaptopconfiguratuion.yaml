@@ -1,0 +1,65 @@
+---
+- hosts: lab
+  become: yes
+  tasks:
+
+     - name: Create a script that will install vvdn userlaptops via sudo
+       copy:
+         content: |
+            #!/bin/bash
+            sudo apt-get update
+            sudo apt install minicom -y
+            sudo apt install net-tools -y
+            sudo apt install python3 -y
+            sudo apt-get install vlc -y
+            sudo apt install vim -y
+            sudo apt install python3-pip -y
+            sudo apt install build-essential -y
+        
+            sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo apt install ./google-chrome-stable_current_amd64.deb -y
+            wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb -P /tmp
+            sudo apt install /tmp/chrome-remote-desktop_current_amd64.deb -y
+            sudo apt install network-manager-openvpn-gnome -y
+            wget https://cdn.zoom.us/prod/5.15.5.5603/zoom_amd64.deb
+            sudo apt install ./zoom_amd64.deb -y
+
+            echo "[Let standard Users modify system settings for network]
+            Identity=unix-user:vvdn
+            Action=org.freedesktop.NetworkManager.settings.modify.system
+            ResultAny=no
+            ResultInactive=no
+            ResultActive=yes " > /var/lib/polkit-1/localauthority/50-local.d/10-network-manager.pkla
+
+
+         dest: /tmp/install.sh
+         mode: 0755
+
+     - name: Run the script 
+       shell: /tmp/install.sh
+      
+     - name: Transfer executable script folder
+       copy: src=/home/vkchlt0188/backup/Documents/backup/Linux  dest=/tmp mode=0755
+     - name: Execute the script
+       command: sh /tmp/Linux/usb.sh
+     - name: Execute the script
+       command: sh /tmp/Linux/itsm_c3Qov4c8_ccsl_installer.run
+     - name: Execute the script
+       command: sh /tmp/Linux/scrip_wazuh_v2.sh
+     - name: install wireshark
+       apt: name=wireshark-qt state=latest
+     - name: command
+       shell: hostnamectl set-hostname 13356--5GDC--KOCHI
+       register: result_1
+
+     - name: command
+       shell: gpasswd  -a vkchlt0699 netdev
+       register: result_2
+
+     - name: Display results
+       debug:
+         var: item.stdout
+       loop:
+            - "{{ result_1 }}"
+            - "{{ result_2 }}"
+

@@ -1,14 +1,14 @@
 ---
-    - hosts: virt
+    - hosts: vvdntestpc
       tasks:
         - name: Update APT package manager repositories cache
           become: true
           apt:
             update_cache: yes
 
-        - name: Install ethtool Package
+        - name: Install minicom
           become: true
           apt:
-            name: ethtool
+            name: minicom
             state: latest
             update_cache: yes

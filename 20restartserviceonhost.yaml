@@ -1,0 +1,9 @@
+---
+- name: Restart service on remote host
+  hosts: localhost
+  gather_facts: false
+  tasks:
+         - name: Restart service
+           service:
+              name: network
+              state: restarted

@@ -1,0 +1,16 @@
+---
+   - name: Create a cron job
+     hosts: vvdntestpc
+     become: true
+     tasks:
+       - name: Schedule cron
+         cron:
+          name: This job is scheduled by Ansible
+          minute: "*"
+          hour: "*"
+          day: "*"
+          month: "*"
+          weekday: "*"
+          user: yedhukrishna.p
+          job: "/home/vvsa/Downloads/vncstale.py"
+          

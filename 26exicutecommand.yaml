@@ -1,0 +1,12 @@
+---
+- name: Lets copy our executable script to remote location execute script and get result back
+  become: yes
+  hosts: localhost
+  tasks:
+     
+     - name: Execute the script
+       command: mkdir bibin3
+     
+     - name: Execute command
+       command: touch bibin3/1hello.txt
+     

@@ -1,0 +1,31 @@
+---
+- name: Run commands and gather results
+  hosts: localhost
+  become: true  # To run commands with sudo
+
+  tasks:
+    - name: Execute command 1
+      shell: sudo dmidecode -t 1
+      register: result_1
+
+   
+
+    - name: Execute command 2
+      shell: lscpu | grep version
+      register: result_2
+
+    - name: Execute command 3
+      shell: free -h
+      register: result_3
+
+    # Add more tasks for additional commands if needed.
+
+    - name: Display results
+      debug:
+        var: item.stdout
+      loop:
+        - "{{ result_1 }}"
+        - "{{ result_2 }}"
+        - "{{ result_3 }}"
+        
+        # Add more results if you have more commands.

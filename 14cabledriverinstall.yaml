@@ -1,0 +1,9 @@
+---
+- name: Lets copy our executable script to remote location execute script and get result back
+  become: yes
+  hosts: vvdntestpc
+  tasks:
+    
+    - name: Execute the command
+      command: sh /home/Tools/Vivado_Lab/2023.1/data/xicom/cable_drivers/lin64/install_script/install_drivers/install_drivers
+     
