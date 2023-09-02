@@ -1,6 +1,6 @@
 import phonenumbers
 from phonenumbers import timezone,geocoder,carrier
-number=input("enter yournumber. : + ")
+number=input("enter yournumber. : +91 ")
 phone=phonenumbers.parse(number)
 time=timezone.time_zones_for_number(phone)
 car=carrier.name_for_number(phone,"en")

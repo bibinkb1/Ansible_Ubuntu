@@ -1,0 +1,15 @@
+---
+- name: Install MySQL Server
+  hosts: slave
+  become: yes  # This allows Ansible to use sudo
+
+  tasks:
+    - name: Update apt cache (for Ubuntu) or yum cache (for CentOS)
+      apt:
+        update_cache: yes
+
+
+    - name: Install MySQL server package
+      package:
+        name: mysql-server
+        state: present

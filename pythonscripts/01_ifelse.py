@@ -1,4 +1,4 @@
-myname = "bibin"
+myname = "bibin1"
 
 if myname >= "bibin":
     print("You are name is bibin.")
