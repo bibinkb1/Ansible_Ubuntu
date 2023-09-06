@@ -1,0 +1,21 @@
+Playbook:- user.yaml
+
+---
+ - name: User Module
+   hosts: dbservers
+   tasks:
+     - name: adding John user
+       user:
+          name: John
+       when: ansible_facts['os_family']=='Debian'
+     - name: find the user
+       shell: cat /etc/passwd | grep John | wc -l
+       register: output
+     - name: User Creation
+       debug:
+          msg: "Created"
+       when: output.stdout=="1"
+     - name: User Removed
+       debug:
+          msg: "Not Created"
+       when: output.stdout!="1"

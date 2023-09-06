@@ -1,0 +1,10 @@
+---
+ - name: play for running shell commands
+   hosts: localhost
+   tasks:
+           - name: Executing echo command
+             command: echo "Hello World"
+             register: output
+           - name: Print the output
+             debug:
+                 msg: "{{ output.stdout }}"

@@ -1,0 +1,21 @@
+---
+- name: Add Cron Job
+  hosts: localhost  # Corrected the hostname to 'localhost'
+                      
+
+  tasks:
+    - name: Add a cron job
+      cron:
+        name: "My Daily Job"   # Name for the cron job
+        minute: "1"            # Minute when the job should run (0-59)
+        hour: "*"              # Asterisk (*) means "every hour"
+        day: "*"               # Asterisk (*) means "every day of the month"
+        month: "*"             # Asterisk (*) means "every month"
+        weekday: "*"           # Asterisk (*) means "every day of the week"
+        job: "/home/bibin/Documents/bash/04_backup.sh"  # Path to the script you want to run
+        state: present          # 'present' ensures the cron job is present
+
+    - name: Restart the cron service (optional)
+      service:
+        name: cron
+        state: restarted

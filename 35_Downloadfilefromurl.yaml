@@ -1,0 +1,19 @@
+---
+- name: create a directory and  Download tomcat from url
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: create a direcotry
+      file:
+        path: /tmp/tomcat
+        state: directory
+        mode: 0755
+        owner: root
+        group: root
+
+    - name: Download a file from url
+      get_url:
+
+              url: http://ftp.cn.debian.org/debian/pool/main/v/vlc/vlc-data_3.0.18-4_all.deb
+              dest : /tmp/tomcat
+              mode : 0755
