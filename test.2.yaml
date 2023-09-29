@@ -4,6 +4,7 @@
   become: yes
 
   tasks:
+   - command: apt update
    - apt: name=wireshark-qt state=latest
    - apt: name=vim state=latest
    - apt: name=git state=latest

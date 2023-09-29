@@ -1,12 +1,10 @@
 ---
-- name: Print the msg
-  hosts: localhost
-  
-  tasks:
-    - name: read file content
-      command: "cat /home/bibin/pythonresulttovariable.py"
-      register: out
-
-    - name: Print the msg
-      debug:
-    	    msg: {{ out.stdout }}
+ - name: play for running shell commands
+   hosts: localhost
+   tasks:
+           - name: Executing echo command
+             command: cat /etc/passwd
+             register: output
+           - name: Print the output
+             debug:
+                 msg: "{{ output.stdout }}"

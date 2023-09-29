@@ -3,7 +3,7 @@
    hosts: localhost
    tasks:
            - name: Executing echo command
-             command: echo "Hello World"
+             command: cat /etc/passwd
              register: output
            - name: Print the output
              debug:
