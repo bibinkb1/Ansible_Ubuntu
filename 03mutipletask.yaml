@@ -1,6 +1,6 @@
-
+---
 - name: Running 2 tasks
-  hosts: localhost
+  hosts: lab
 
   tasks:
     - name: Test connectivity

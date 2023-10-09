@@ -1,6 +1,6 @@
 ---
  - name: play for running shell commands
-   hosts: localhost
+   hosts: lab
    tasks:
            - name: Executing echo command
              command: cat /etc/hosts

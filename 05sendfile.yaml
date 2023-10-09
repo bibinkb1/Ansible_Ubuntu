@@ -1,9 +1,9 @@
 ---
 - name: Ansible Copy Example Local to Remote
-  hosts: localhost
+  hosts: lab
   tasks:
     - name: copying file with playbook
 
       copy:
-        src: ~/Documents/01.txt
+        src: /home/bibin/Documents/01.txt
         dest: /tmp

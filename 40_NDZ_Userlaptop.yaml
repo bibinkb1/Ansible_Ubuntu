@@ -1,0 +1,60 @@
+---
+- hosts: lab
+  tasks:
+
+     - name: Create a script that will install packages for NDZ pc
+       become: yes
+       copy:
+         content: |
+            #!/usr/bin/bash
+            sudo apt-get update
+            sudo apt install git -y
+            sudo apt install net-tools -y
+            sudo apt install python3 -y
+            sudo apt-get install vlc -y
+            sudo apt install vim -y
+            sudo apt install pidgin -y
+            sudo rm /var/lib/dpkg/lock 
+            sudo rm /var/cache/apt/archives/lock
+            sudo apt update
+            sudo apt --fix-broken install
+            sudo apt install filezilla -y
+            cd /tmp/ 
+            sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo apt install ./google-chrome-stable_current_amd64.deb -y
+            sudo rm google-chrome-stable_current_amd64.deb
+            sdo wget https://go.skype.com/skypeforlinux-64.deb
+            sudo apt install ./skypeforlinux-64.deb
+            rm skypeforlinux-64.deb
+            sudo wget https://download.anydesk.com/linux/deb/anydesk_6.0.1-1_amd64.deb
+            sudo apt install ./anydesk_6.0.1-1_amd64.deb -y
+            sudo rm anydesk_6.0.1-1_amd64.deb
+            sudo wget https://filestore.fortinet.com/forticlient/forticlient_vpn_7.0.7.0246_amd64.deb
+            sudo apt install ./forticlient_vpn_7.0.7.0246_amd64.deb
+            sudo rm forticlient_vpn_7.0.7.0246_amd64.deb
+            sudo wget https://az764295.vo.msecnd.net/stable/abd2f3db4bdb28f9e95536dfa84d8479f1eb312d/code_1.82.2-1694671812_amd64.deb
+            sudo apt install ./code_1.82.2-1694671812_amd64.deb
+            sudo rm code_1.82.2-1694671812_amd64.deb
+
+          
+         dest: /tmp/install.sh
+         mode: 0755
+
+     - name: Run the script 
+       become: yes
+       
+       shell: sh /tmp/install.sh
+
+
+     - name: "Example1: Validate if a String or line is present in the file"
+       become: yes
+       become_user: root
+       tags: example1
+       lineinfile:
+          path: /etc/ssh/sshd_config
+          line: "PermitRootLogin"
+          state: present 
+          backup: yes
+       check_mode: yes
+       register: example1out
+      

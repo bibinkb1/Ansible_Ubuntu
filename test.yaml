@@ -1,15 +1,17 @@
 ---
 - name: command
   become: yes
-  hosts: localhost
+  hosts: test
   tasks: 
 
      - name: command
-       shell: hostnamectl set-hostname 8386--IT--KOCHI
+       shell: hostnamectl set-hostname bibin
+       shell: hostname
        register: result_1
 
      - name: command
-       shell: gpasswd  -a vkchlt0188 netdev
+       shell: echo "hi"
+    
        register: result_2
 
      - name: Display results

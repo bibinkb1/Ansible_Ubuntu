@@ -1,0 +1,19 @@
+---
+  - name: Examples of lineinfile
+    hosts: lab
+    
+    tasks:
+      - name: "Example1: Validate if a String or line is present in the file"
+        become: yes
+        become_user: root
+        tags: example1
+        lineinfile:
+          path: /etc/ssh/sshd_config
+          # The String to Search
+          regexp: "PermitRootLogin prohibit-passwd" 
+          # The String to Replace
+          line: "PermitRootLogin yes"
+          state: present
+          backup: yes
+        
+        register: example1out

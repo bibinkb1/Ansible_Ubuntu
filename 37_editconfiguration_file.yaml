@@ -1,0 +1,15 @@
+---
+  - name: Examples of lineinfile
+    hosts: test
+    
+    tasks:
+      - name: "Example2: Add the line if it does not exist"
+        become: yes
+        become_user: root
+        tags: example2
+        lineinfile:
+          path: /etc/ssh/sshd_config
+          line: "PermitRootLogin yes"
+          state: present
+          backup: yes
+        register: example2out
