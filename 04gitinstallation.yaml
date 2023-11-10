@@ -1,5 +1,5 @@
 ---
-    - hosts: test
+    - hosts: lab
       tasks:
         - name: Update APT package manager repositories cache
           become: true
