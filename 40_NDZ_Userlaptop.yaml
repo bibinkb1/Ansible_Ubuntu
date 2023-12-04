@@ -1,5 +1,5 @@
 ---
-- hosts: test
+- hosts: localhost
   tasks:
 
      - name: Create a script that will install packages for NDZ pc
