@@ -1,7 +1,7 @@
 ---
 - name: print  message
-  hosts: lab
-
+  hosts: test
+  become: true
   tasks: 
     - name: hello world
       debug: msg="hello"

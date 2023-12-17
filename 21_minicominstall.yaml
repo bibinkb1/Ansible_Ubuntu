@@ -1,5 +1,5 @@
 ---
-    - hosts: vvdntestpc
+    - hosts: test
       tasks:
         - name: Update APT package manager repositories cache
           become: true

@@ -4,7 +4,7 @@
   hosts: test
   tasks: 
 
-     - name: command
+     - name: command1
        shell: hostnamectl set-hostname bibin
        shell: hostname
        register: result_1

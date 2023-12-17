@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: test
   tasks:
 
      - name: Create a script that will install packages for NDZ pc
@@ -54,7 +54,8 @@
             YOUR_FILE='/etc/ssh/sshd_config'
             TEXT="#PermitRootLogin prohibit-password"
             sed -i "s/$TEXT/PermitRootLogin yes/" $YOUR_FILE
-            
+            sudo service sshd restart
+
 
           
          dest: /tmp/install.sh

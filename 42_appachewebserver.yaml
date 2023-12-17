@@ -1,0 +1,10 @@
+---
+- name: This installs and starts Apache webserver
+  hosts: webservers
+
+  tasks:
+  - name: Install Apache Webserver 
+    yum:   name=httpd  state=latest
+
+ - name: check httpd status
+    service:   name=httpd  state=started
