@@ -1,7 +1,7 @@
 ---
 - name: Lets copy our executable script to remote location execute script and get result back
   become: yes
-  hosts: localhost
+  hosts: lab
   tasks:
      
      - name: Execute the script

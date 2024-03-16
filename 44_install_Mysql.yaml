@@ -1,0 +1,41 @@
+---
+- name: Install and Configure MySQL
+  hosts: localhost
+  become: true
+
+  vars:
+    mysql_root_password: "redhat"
+    mysql_db_name: "testdb"
+    mysql_db_user: "bibin"
+    mysql_db_password: "bibin@123"
+
+  tasks:
+    - name: Install MySQL Server
+      apt:
+        name: mysql-server
+        state: present
+
+    - name: Secure MySQL Installation
+      mysql_user:
+        name: root
+        password: "{{ mysql_root_password }}"
+        host: localhost
+        login_user: root
+        login_password: "{{}}"
+
+    - name: Create MySQL Database
+      mysql_db:
+        name: "{{ mysql_db_name }}"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+    - name: Create MySQL User
+      mysql_user:
+        name: "{{ mysql_db_user }}"
+        password: "{{ mysql_db_password }}"
+        priv: "{{ mysql_db_name }}.*:ALL"
+        host: localhost
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        state: present

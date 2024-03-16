@@ -1,0 +1,72 @@
+---
+- name: Setup LAMP stack
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Install Apache
+      package:
+        name: apache2
+        state: present
+
+    - name: Ensure Apache service is running
+      service:
+        name: apache2
+        state: started
+        enabled: true
+
+    - name: Install MySQL/MariaDB
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - mysql-server
+        - mysql-client
+
+    - name: Ensure MySQL/MariaDB service is running
+      service:
+        name: mysql
+        state: started
+        enabled: true
+
+    - name: Secure MySQL installation (optional, for production)
+      command: mysql_secure_installation
+      args:
+        stdin: |
+          Y
+          password
+          password
+          Y
+          Y
+          Y
+          Y
+
+    - name: Install PHP and required modules
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - php
+        - libapache2-mod-php
+        - php-mysql
+        - php-curl
+        - php-gd
+        - php-xml
+        - php-mbstring
+
+
+
+    - name: creating mysql user (medium_post)
+      mysql_user:
+        name: root
+        password: redhat
+        priv: '*.*:ALL'
+        host: '%'
+        state: present   
+
+
+     
+    - name: Restart Apache to apply changes
+      service:
+        name: apache2
+        state: restarted    

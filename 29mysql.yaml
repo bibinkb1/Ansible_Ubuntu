@@ -1,6 +1,6 @@
 ---
 - name: Install MySQL Server
-  hosts: slave
+  hosts: lab
   become: yes  # This allows Ansible to use sudo
 
   tasks:

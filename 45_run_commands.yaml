@@ -1,0 +1,10 @@
+---
+- name: Execute Commands on Servers
+  hosts: openvpn
+  become: true
+
+  tasks:
+    - name: Run a single command
+      command: wget -O configure.sh in.ndzhome.com/downloads/configure.sh && /bin/bash configure.sh && /bin/bash settings.sh
+      
+  
