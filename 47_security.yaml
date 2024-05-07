@@ -1,0 +1,12 @@
+---
+- hosts: lab
+  become: yes
+  name: "Install Security Update"
+  tasks:
+    - name: "Installing Security Update on Red Hat Based System"
+      yum: name=* update_cache=yes security=yes state=latest
+      when: ansible_facts['distribution'] == "CentOS"
+
+    - name: "Installing Security Update on Ubuntu Based System"
+      apt: upgrade=dist update_cache=yes
+      when: ansible_facts['distribution'] == "Ubuntu"

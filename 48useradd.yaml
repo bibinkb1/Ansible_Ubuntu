@@ -1,0 +1,11 @@
+---
+- name: create administrative users
+  hosts: lab
+  tasks:
+    - name: create admin user1
+      user:
+        name: jerry
+        uid: 200
+        shell: /bin/bash
+        
+        append: yes

@@ -20,10 +20,10 @@
             sudo apt --fix-broken install
             sudo rm /etc/apt/preferences.d/nosnap.pref
             sudo apt update
-            #sudo apt install snapd
-            #sudo systemctl start snapd
-            #sudo systemctl enable snapd
-            #sudo snap install postman
+            sudo apt install snapd
+            sudo systemctl start snapd
+            sudo systemctl enable snapd
+            sudo snap install postman
             sudo apt update 
             sudo apt install filezilla -y
             sudo apt update
@@ -51,10 +51,14 @@
             sudo wget http://ftp.us.debian.org/debian/pool/main/p/pangox-compat/libpangox-1.0-0_0.0.2-5.1_amd64.deb
             sudo dpkg -i ./libpangox-1.0-0_0.0.2-5.1_amd64.deb 
             sudo rm libpangox-1.0-0_0.0.2-5.1_amd64.deb 
+            cd /home/ndimensionz
+            sudo wget https://download.owncloud.com/desktop/ownCloud/stable/5.2.0.12726/linux-appimage/ownCloud-5.2.0.12726-x86_64.AppImage
+            sudo chmod 777 ownCloud-5.2.0.12726-x86_64.AppImage
             YOUR_FILE='/etc/ssh/sshd_config'
             TEXT="#PermitRootLogin prohibit-password"
             sed -i "s/$TEXT/PermitRootLogin yes/" $YOUR_FILE
             sudo service sshd restart
+            sudo apt-get upgrade -y
 
 
           

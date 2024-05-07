@@ -111,7 +111,7 @@
                state: "mounted"
                fstype: "cifs"
                path: /bitNxsa
-               src: "//172.25.4.100/bitNxsa"
+               src: "/172.25.4.100/bitNxsa"
                opts: "credentials=/root/smb_pwd,file_mode=0777,dir_mode=0777,gid=root,uid=root"
       
 
