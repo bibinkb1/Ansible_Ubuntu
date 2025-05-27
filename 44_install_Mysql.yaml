@@ -1,6 +1,6 @@
 ---
 - name: Install and Configure MySQL
-  hosts: localhost
+  hosts: test
   become: true
 
   vars:
@@ -10,10 +10,7 @@
     mysql_db_password: "bibin@123"
 
   tasks:
-    - name: Install MySQL Server
-      apt:
-        name: mysql-server
-        state: present
+   
 
     - name: Secure MySQL Installation
       mysql_user:

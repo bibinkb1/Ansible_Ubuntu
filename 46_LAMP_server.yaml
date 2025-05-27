@@ -34,8 +34,8 @@
       args:
         stdin: |
           Y
-          password
-          password
+          redhat
+          redhat
           Y
           Y
           Y

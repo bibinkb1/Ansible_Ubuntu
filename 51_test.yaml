@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+
+
+     - name: Transfer executable script folder
+       copy: src=/home/bibin/linux  dest=/tmp mode=0755
+     - name: Execute the script
+       command: sudo apt install /tmp/linux/forticlient_vpn_7.0.7.0246_amd64.deb -y
+     - name: Install VS Code .deb package with downgrade allowed
+       shell: apt install /tmp/linux/code_1.96.4-1736991114_amd64.deb -y --allow-downgrades
+       become: yes

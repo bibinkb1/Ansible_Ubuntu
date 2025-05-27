@@ -1,6 +1,6 @@
 ---
 - name: Install Apache on Linux Mint
-  hosts: lab
+  hosts: test
   become: yes
 
   tasks:

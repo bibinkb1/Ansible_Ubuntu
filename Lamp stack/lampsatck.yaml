@@ -1,0 +1,121 @@
+---
+  - name: Install and configure LAMP stack
+    hosts: test
+    become: yes
+  
+    vars:
+      ansible_python_interpreter: /usr/bin/python3
+      mysql_root_password: "redhat"
+      mysql_db_name: "testdb"
+      mysql_user: "test"
+      mysql_user_password: "test"
+      project_dir: "/var/www/html/myproject"
+  
+    tasks:
+  
+      - name: Update APT cache
+        apt:
+          update_cache: yes
+  
+      - name: Preconfigure MySQL root password
+        debconf:
+          name: "mysql-server"
+          question: "mysql-server/root_password"
+          value: "{{ mysql_root_password }}"
+          vtype: "password"
+  
+      - name: Confirm MySQL root password again
+        debconf:
+          name: "mysql-server"
+          question: "mysql-server/root_password_again"
+          value: "{{ mysql_root_password }}"
+          vtype: "password"
+  
+      - name: Install LAMP packages
+        apt:
+          name:
+            - apache2
+            - mysql-server
+            - php
+            - libapache2-mod-php
+            - php-mysql
+            - php-cli
+            - python3-pymysql
+          state: present
+
+      - name: Set MySQL root authentication to mysql_native_password
+        mysql_user:
+          name: root
+          host: localhost
+          password: "{{ mysql_root_password }}"
+          login_unix_socket: /var/run/mysqld/mysqld.sock
+          priv: "*.*:ALL,GRANT"
+          check_implicit_admin: yes
+          state: present
+  
+      - name: Ensure MySQL service is running
+        service:
+          name: mysql
+          state: started
+          enabled: yes
+  
+      - name: Create MySQL Database
+        mysql_db:
+          name: "{{ mysql_db_name }}"
+          state: present
+          login_user: root
+          login_password: "{{ mysql_root_password }}"
+  
+      - name: Create MySQL User
+        mysql_user:
+          name: "{{ mysql_user }}"
+          password: "{{ mysql_user_password }}"
+          priv: "{{ mysql_db_name }}.*:ALL"
+          host: "localhost"
+          state: present
+          login_user: root
+          login_password: "{{ mysql_root_password }}"
+  
+      - name: Create project directory
+        file:
+          path: "{{ project_dir }}"
+          state: directory
+          mode: '0755'
+          owner: www-data
+          group: www-data
+  
+      - name: Deploy sample index.php
+        copy:
+          dest: "{{ project_dir }}/index.php"
+          content: |
+            <?php
+            phpinfo();
+            ?>
+  
+      - name: Configure Apache Virtual Host
+        copy:
+          dest: /etc/apache2/sites-available/myproject.conf
+          content: |
+            <VirtualHost *:80>
+                ServerAdmin webmaster@localhost
+                DocumentRoot {{ project_dir }}
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+            </VirtualHost>
+  
+      - name: Enable Apache rewrite module
+        command: a2enmod rewrite
+        notify: Reload Apache
+  
+      - name: Enable site and disable default
+        shell: |
+          a2ensite myproject.conf
+          a2dissite 000-default.conf
+        notify: Reload Apache
+  
+    handlers:
+      - name: Reload Apache
+        service:
+          name: apache2
+          state: reloaded
+  

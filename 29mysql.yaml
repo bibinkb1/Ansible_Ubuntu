@@ -1,10 +1,10 @@
 ---
 - name: Install MySQL Server
-  hosts: test
+  hosts: localhost
   become: yes  # This allows Ansible to use sudo
 
   tasks:
-    - name: Update apt cache (for Ubuntu) or yum cache (for CentOS)
+    - name: Update apt cache (for Ubuntu) 
       apt:
         update_cache: yes
 

@@ -4,9 +4,7 @@
   become: true
 
   tasks:
-    - name: Update apt package cache
-      apt:
-        update_cache: yes
+   
 
     - name: Install Apache and PHP
       apt:

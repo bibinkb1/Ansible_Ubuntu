@@ -1,5 +1,5 @@
 ---
-- hosts: test
+- hosts: lab
   tasks:
 
      - name: Create a script that will install packages for NDZ pc
@@ -26,26 +26,29 @@
             sudo snap install postman
             sudo apt update 
             sudo apt install filezilla -y
+            sudo apt install python3-virtualenv -y
+            sudo apt install python3-pip -y
+            sudo apt update
+            sudo apt install python2 -y
+            curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
+            sudo python2 get-pip.py
+            sudo python2 -m pip install virtualenv
             sudo apt update
             cd /tmp/ 
             sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
             sudo apt install ./google-chrome-stable_current_amd64.deb -y
             sudo rm google-chrome-stable_current_amd64.deb
-            sudo snap install skype
+            sudo snap install teams-for-linux
+      
             sudo wget https://download.anydesk.com/linux/anydesk_6.3.2-1_amd64.deb
             sudo apt install ./anydesk_6.3.2-1_amd64.deb -y
             sudo rm anydesk_6.3.2-1_amd64.deb
             sudo rm /var/lib/dpkg/lock 
             sudo rm /var/cache/apt/archives/lock
             sudo apt --fix-broken install -y
-            sudo wget https://filestore.fortinet.com/forticlient/forticlient_vpn_7.0.7.0246_amd64.deb
-            sudo apt install ./forticlient_vpn_7.0.7.0246_amd64.deb -y
-            sudo rm forticlient_vpn_7.0.7.0246_amd64.deb
+            sudo apt update
             sudo rm /var/lib/dpkg/lock 
             sudo rm /var/cache/apt/archives/lock
-            sudo wget https://az764295.vo.msecnd.net/stable/abd2f3db4bdb28f9e95536dfa84d8479f1eb312d/code_1.82.2-1694671812_amd64.deb
-            sudo apt install ./code_1.82.2-1694671812_amd64.deb -y
-            sudo rm code_1.82.2-1694671812_amd64.deb
             sudo wget http://ftp.us.debian.org/debian/pool/main/p/pangox-compat/libpangox-1.0-0_0.0.2-5.1_amd64.deb
             sudo dpkg -i ./libpangox-1.0-0_0.0.2-5.1_amd64.deb 
             sudo rm libpangox-1.0-0_0.0.2-5.1_amd64.deb 
@@ -54,6 +57,10 @@
             TEXT="#PermitRootLogin prohibit-password"
             sed -i "s/$TEXT/PermitRootLogin yes/" $YOUR_FILE
             sudo service sshd restart
+            sudo rm /var/lib/dpkg/lock 
+            sudo rm /var/cache/apt/archives/lock
+            sudo dpkg --configure -a
+            sudo apt install -f
             sudo apt-get upgrade -y
             sudo wget -nv https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Ubuntu_23.04/Release.key -O - | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/owncloud-client.gpg > /dev/null
             sudo apt update
@@ -61,7 +68,7 @@
             sudo echo 'deb https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Ubuntu_23.04/ /' | sudo tee -a /etc/apt/sources.list.d/owncloud-client.list
             sudo apt update
             sudo apt install owncloud-client
-
+            sudo apt-get install -f
           
          dest: /tmp/install.sh
          mode: 0755
@@ -71,7 +78,11 @@
        
        shell: sh /tmp/install.sh
 
-
+     - name: Transfer executable script folder
+       copy: src=/home/bibin/linux  dest=/tmp mode=0755
+          
+     
+  
      
      
      

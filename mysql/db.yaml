@@ -1,12 +1,12 @@
 - name: setup Mysql with medium_db db and remote login
   become: yes
-  hosts: localhost
+  hosts: test
   tasks:
     - name: Installing Mysql  and dependencies
       package:
        name: "{{item}}"
        state: present
-       update_cache: yes
+       
       loop:
        - mysql-server
        - mysql-client 
@@ -18,16 +18,16 @@
         name: mysql
         state: started
         enabled: yes
-    - name: creating mysql user
+    - name: creating mysql user (medium_post)
       mysql_user:
-        name: root
-        password: redhat
+        name: "{{db_user}}"
+        password: "{{db_pass}}"
         priv: '*.*:ALL'
         host: '%'
         state: present
     - name: creating medium_db
       mysql_db:
-        name: testdb
+        name: "{{db_name}}"
         state: present
     - name: Enable remote login to mysql
       lineinfile:

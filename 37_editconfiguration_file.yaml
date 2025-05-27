@@ -1,6 +1,6 @@
 ---
   - name: Examples of lineinfile
-    hosts: test
+    hosts: localhost
     
     tasks:
       - name: "Example2: Add the line if it does not exist"
