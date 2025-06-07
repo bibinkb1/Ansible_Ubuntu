@@ -1,3 +1,3 @@
-db_user: medium_post
-db_pass: mebium123
-db_name: medium_db
+db_user: test
+db_pass: redhat
+db_name: test

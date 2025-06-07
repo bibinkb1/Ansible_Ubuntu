@@ -1,0 +1,31 @@
+---
+- name: Install .deb package on remote
+  hosts: test
+  become: yes
+  tasks:
+    - name: Copy .deb file to remote /tmp
+      copy:
+        src: /home/bibin/linux/
+        dest: /tmp/linux/
+        mode: '0644'
+
+    - name: Install the .deb package using dpkg
+      command: dpkg -i /tmp/linux/code_1.100.3-1748872405_amd64.deb -y
+      register: dpkg_result
+      ignore_errors: yes
+
+    - name: command
+      shell: sudo apt-get install -f -y 
+  
+
+    - name: Install the .deb package using dpkg
+      command: dpkg -i /tmp/linux/forticlient_vpn_7.4.3.1736_amd64.deb -y
+      register: dpkg_result
+      ignore_errors: yes
+
+    - name: Fix missing dependencies (if any)
+      apt:
+        update_cache: yes
+        upgrade: no
+        state: latest
+      when: dpkg_result.rc != 0

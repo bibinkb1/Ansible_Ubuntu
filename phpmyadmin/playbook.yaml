@@ -1,0 +1,42 @@
+---
+- name: Install phpMyAdmin on LAMP server
+  hosts: test
+  become: true
+
+  vars:
+    mysql_root_password: "redhat"
+    
+  tasks:
+
+    - name: Ensure debconf-utils is installed (for pre-seeding)
+      apt:
+        name: debconf-utils
+        state: present
+
+    - name: Set selections for phpmyadmin install
+      debconf:
+        name: phpmyadmin
+        question: "{{ item.question }}"
+        value: "{{ item.value }}"
+        vtype: "{{ item.vtype }}"
+      loop:
+        - { question: "phpmyadmin/reconfigure-webserver", value: "apache2", vtype: "select" }
+        - { question: "phpmyadmin/dbconfig-install", value: "true", vtype: "boolean" }
+        - { question: "phpmyadmin/mysql/admin-pass", value: "{{ mysql_root_password }}", vtype: "password" }
+        
+    - name: Install phpMyAdmin
+      apt:
+        name: phpmyadmin
+        state: present
+        update_cache: yes
+
+    - name: Ensure phpMyAdmin is symlinked to Apache web root
+      file:
+        src: /usr/share/phpmyadmin
+        dest: /var/www/html/phpmyadmin
+        state: link
+
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted

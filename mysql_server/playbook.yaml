@@ -1,0 +1,51 @@
+---
+- name: Install and configure MySQL with remote root access
+  hosts: test
+  become: yes
+  vars:
+    mysql_root_password: "StrongRootPass"
+    mysql_root_user: "root"
+    mysql_bind_address: "0.0.0.0"
+    mysql_socket: "/var/run/mysqld/mysqld.sock"
+
+  collections:
+    - community.mysql
+
+  tasks:
+
+    - name: Install dependencies
+      apt:
+        name:
+          - mysql-server
+          - python3-pymysql
+        state: present
+        update_cache: yes
+
+    - name: Ensure MySQL is running and enabled
+      service:
+        name: mysql
+        state: started
+        enabled: true
+
+    - name: Set root password and allow remote root login
+      community.mysql.mysql_user:
+        name: "{{ mysql_root_user }}"
+        host: "%"
+        password: "{{ mysql_root_password }}"
+        priv: "*.*:ALL,GRANT"
+        state: present
+        login_unix_socket: "{{ mysql_socket }}"
+
+    - name: Update bind-address to allow remote connections
+      lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: '^bind-address'
+        line: "bind-address = {{ mysql_bind_address }}"
+        backup: yes
+      notify: Restart MySQL
+
+  handlers:
+    - name: Restart MySQL
+      service:
+        name: mysql
+        state: restarted
