@@ -1,0 +1,12 @@
+---
+- name: Disable ownCloud APT repo
+  hosts: lab
+  become: yes
+  tasks:
+    - name: Comment out ownCloud repository (if exists)
+      ansible.builtin.replace:
+        path: /etc/apt/sources.list.d/owncloud.list
+        regexp: '^deb'
+        replace: '#deb'
+      ignore_errors: yes
+      when: ansible_facts['distribution'] == "Ubuntu"

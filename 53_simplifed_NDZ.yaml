@@ -1,0 +1,113 @@
+---
+- name: Simple NDZ Desktop Setup
+  hosts: lab
+  become: yes
+  vars:
+    vs_code_deb: "code_1.100.3-1748872405_amd64.deb"
+    forti_deb: "forticlient_vpn_7.4.3.1736_amd64.deb"
+    chrome_url: "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+    anydesk_url: "https://download.anydesk.com/linux/anydesk_6.3.2-1_amd64.deb"
+
+  tasks:
+    - name: Install APT packages
+      apt:
+        name:
+          - git
+          - net-tools
+          - python3
+          - vlc
+          - vim
+          - pidgin
+          - filezilla
+          - python3-virtualenv
+          - python3-pip
+          - python2
+          - curl
+          - apt-transport-https
+        update_cache: yes
+        state: present
+
+    - name: Enable Snap and install apps
+      shell: |
+        rm -f /etc/apt/preferences.d/nosnap.pref
+        apt update
+        apt install -y snapd
+        systemctl enable --now snapd
+        snap install postman
+        snap install teams-for-linux
+
+    - name: Install pip for Python 2
+      shell: |
+        curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
+        python2 get-pip.py
+        python2 -m pip install virtualenv
+      args:
+        chdir: /tmp
+        creates: /usr/local/bin/pip2
+
+    - name: Download Google Chrome .deb
+      get_url:
+        url: "{{ chrome_url }}"
+        dest: /tmp/google-chrome.deb
+
+    - name: Install Google Chrome
+      apt:
+        deb: /tmp/google-chrome.deb
+
+    - name: Download AnyDesk .deb
+      get_url:
+        url: "{{ anydesk_url }}"
+        dest: /tmp/anydesk.deb
+
+    - name: Install AnyDesk
+      apt:
+        deb: /tmp/anydesk.deb
+
+    - name: Enable SSH root login
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PermitRootLogin'
+        line: 'PermitRootLogin yes'
+      notify: Restart SSH
+
+    - name: Install OwnCloud Client
+      shell: |
+        wget -nv https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Ubuntu_23.04/Release.key -O - | gpg --dearmor | tee /etc/apt/trusted.gpg.d/owncloud-client.gpg > /dev/null
+        echo 'deb https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Ubuntu_23.04/ /' > /etc/apt/sources.list.d/owncloud-client.list
+        apt update
+        apt install -y owncloud-client
+
+    - name: Ensure temp directory exists for .deb files
+      file:
+        path: /tmp/linux
+        state: directory
+        mode: '0755'
+
+    - name: Copy and install VS Code
+      copy:
+        src: "/home/bibin/linux/{{ vs_code_deb }}"
+        dest: "/tmp/linux/{{ vs_code_deb }}"
+      notify: Install VS Code
+
+    - name: Copy and install FortiClient
+      copy:
+        src: "/home/bibin/linux/{{ forti_deb }}"
+        dest: "/tmp/{{ forti_deb }}"
+      notify: Install FortiClient
+
+  handlers:
+    - name: Restart SSH
+      service:
+        name: ssh
+        state: restarted
+
+    - name: Install VS Code
+      apt:
+        deb: "/tmp/linux/{{ vs_code_deb }}"
+
+    - name: Install FortiClient
+      shell: |
+        dpkg -i /tmp/{{ forti_deb }} || apt --fix-broken install -y
+    
+    
+          

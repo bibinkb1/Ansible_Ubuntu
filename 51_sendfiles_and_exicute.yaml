@@ -1,29 +1,50 @@
 ---
-- name: Install .deb package on remote
-  hosts: test
+- name: Install .deb packages on remote lab systems
+  hosts: lab
   become: yes
+  vars:
+    vs_code_deb: code_1.100.3-1748872405_amd64.deb
+    forti_deb: forticlient_vpn_7.4.3.1736_amd64.deb
+
   tasks:
-    - name: Copy .deb file to remote /tmp
+    - name: Ensure /tmp/linux directory exists on remote
+      file:
+        path: /tmp/linux
+        state: directory
+        mode: '0755'
+
+    - name: Copy Visual Studio Code .deb file to remote
       copy:
-        src: /home/bibin/linux/
-        dest: /tmp/linux/
+        src: "/home/bibin/linux/{{ vs_code_deb }}"
+        dest: "/tmp/linux/{{ vs_code_deb }}"
         mode: '0644'
 
-    - name: Install the .deb package using dpkg
-      command: dpkg -i /tmp/linux/code_1.100.3-1748872405_amd64.deb -y
+    - name: Install Visual Studio Code using APT from .deb
+      apt:
+        deb: "/tmp/linux/{{ vs_code_deb }}"
+
+    - name: Copy FortiClient .deb file to remote
+      copy:
+        src: "/home/bibin/linux/{{ forti_deb }}"
+        dest: "/tmp/{{ forti_deb }}"
+        mode: '0644'
+    - name: Reconfigure FortiClient after dependencies fixed
+      become: yes
+        
+      command: dpkg --configure forticlient
+      register: reconfigure_output
+      failed_when: "'is already installed and configured' not in reconfigure_output.stderr"
+
+    - name: Install FortiClient VPN using dpkg
+      command:
+        argv:
+          - dpkg
+          - -i
+          - "/tmp/{{ forti_deb }}"
       register: dpkg_result
       ignore_errors: yes
 
-    - name: command
-      shell: sudo apt-get install -f -y 
-  
-
-    - name: Install the .deb package using dpkg
-      command: dpkg -i /tmp/linux/forticlient_vpn_7.4.3.1736_amd64.deb -y
-      register: dpkg_result
-      ignore_errors: yes
-
-    - name: Fix missing dependencies (if any)
+    - name: Fix missing dependencies if dpkg failed
       apt:
         update_cache: yes
         upgrade: no

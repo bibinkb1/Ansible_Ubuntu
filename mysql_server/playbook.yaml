@@ -4,7 +4,7 @@
   become: yes
   vars:
     mysql_root_password: "StrongRootPass"
-    mysql_root_user: "root"
+    mysql_root_user: "test"
     mysql_bind_address: "0.0.0.0"
     mysql_socket: "/var/run/mysqld/mysqld.sock"
 
